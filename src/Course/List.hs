@@ -282,12 +282,10 @@ find p (x :. xs) = if p x then Full x else find p xs
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 as = let indices = foldRight inc Nil as
-                   inc _ Nil = 1:.Nil
-                   inc _ (x:.xs) = (x+1):.x:.xs
-                   findGt xs c = find (\x -> x > c) xs
-                   isFull = optional (const True) False
-               in  isFull (findGt indices 4)
+lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
+lengthGT4 _ = False
+
+
 
 -- | Reverse a list.
 --
@@ -303,8 +301,7 @@ lengthGT4 as = let indices = foldRight inc Nil as
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo: Course.List#reverse"
+reverse = foldLeft (flip (:.)) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
