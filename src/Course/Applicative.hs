@@ -48,13 +48,13 @@ instance Applicative ExactlyOne where
     a
     -> ExactlyOne a
   pure =
-    error "todo: Course.Applicative pure#instance ExactlyOne"
-  (<*>) :: 
+    ExactlyOne
+
+  (<*>) ::
     ExactlyOne (a -> b)
     -> ExactlyOne a
     -> ExactlyOne b
-  (<*>) =
-    error "todo: Course.Applicative (<*>)#instance ExactlyOne"
+  (<*>) (ExactlyOne f) (ExactlyOne a) = ExactlyOne (f a)
 
 -- | Insert into a List.
 --
@@ -67,13 +67,19 @@ instance Applicative List where
     a
     -> List a
   pure =
-    error "todo: Course.Applicative pure#instance List"
+    (:. Nil)
+
   (<*>) ::
     List (a -> b)
     -> List a
     -> List b
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance List"
+  --(<*>) Nil xs = Nil
+  --(<*>) (f :. fs) xs = (f <$> xs) ++ (fs <*> xs)
+  (<*>) fs xs = let go Nil xs = Nil
+                    go (f :. fs) xs = (f <$> xs) :. (go fs xs)
+                in  flatten (go fs xs)
+
+
 
 -- | Insert into an Optional.
 --
